@@ -9,24 +9,26 @@ import (
 	"github.com/devfeel/dotweb"
 	"github.com/devfeel/middleware/basicauth"
 )
-
+//定义应答body结构
 type ResBody struct {
 	Status      string `json:"status"`
 	AccessToken string `json:"access_token"`
 }
-
+//给message赋值
 var message = ResBody{
 	Status:      "failed",
 	AccessToken: "",
 }
-
+//token处理
 func tokenHandler(ctx dotweb.Context) error {
+	//请求接口查询appid
 	appid := ctx.QueryString("appid")
 	if appid == "" {
 		log.Println("ERROR: 没有提供AppID参数")
+		//返回请求接口结果
 		return ctx.WriteJsonC(http.StatusNotFound, message)
 	}
-
+	//
 	if secret, isExist := app.Accounts[appid]; isExist {
 		var access_token string
 		var record_time string
@@ -57,12 +59,15 @@ func tokenHandler(ctx dotweb.Context) error {
 				message.AccessToken = access_token
 			}
 		} else {
+			//token为空 ，调用接口请求
 			token := app.WxToken.Get(appid, secret)
 			if token == "" {
 				log.Println("ERROR: 没有获得access_token.")
 				return ctx.WriteJsonC(http.StatusNotFound, message)
 			}
+			//掉微信接口获取到token ， app更新token
 			app.UpdateToken(appid)
+			//将token的值赋值给message
 			message.AccessToken = app.WxToken.AccessToken
 		}
 
@@ -82,13 +87,15 @@ func InitRoute(server *dotweb.HttpServer) {
 		"pass": "wechat",
 	}
 
-	option := basicauth.BasicAuthOption{}
+	option := basicauth.BasicAuthOption{}//定义结构体
+
 	option.Auth = func(name, pwd string) bool {
 		if name == form["user"] && pwd == form["pass"] {
 			return true
 		}
 		return false
 	}
+
 
 	server.GET("/token", tokenHandler).Use(basicauth.Middleware(option))
 }

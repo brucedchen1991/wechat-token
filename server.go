@@ -12,18 +12,27 @@ import (
 	"github.com/tidwall/buntdb"
 )
 
+
+//Map 是无序的，我们无法决定它的返回顺序，这是因为 Map 是使用 hash 表来实现的。
+/* 声明变量，默认 map 是 nil */
+//var map_variable map[key_data_type]value_data_type
+
+/* 使用 make 函数 */
+//map_variable := make(map[key_data_type]value_data_type)
+//声明一个结构体
+//结构体包含 Accounts DB Web WxToken
 type App struct {
-	Accounts map[string]string
+	Accounts map[string]string //map类型 key是string value是string
 	DB       *buntdb.DB
 	Web      *dotweb.DotWeb
 	WxToken  *Token
 }
-
+//声明一个Account结构体
 type Account struct {
-	AppID  string `json:"appid"`
+	AppID  string `json:"appid"`//AppID是string类型的
 	Secret string `json:"secret"`
 }
-
+//函数返回App结构体
 func NewApp() *App {
 	var a = &App{}
 	a.Accounts = make(map[string]string)

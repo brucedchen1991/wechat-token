@@ -12,8 +12,9 @@ import (
 var app = NewApp()
 
 func main() {
-	var err error
+	var err error //声明一个error接口变量
 
+	//在 go 标准库中提供了一个包：flag，方便进行命令行解析。
 	var (
 		version = flag.Bool("version", false, "version v0.1")
 		config  = flag.String("config", "account.json", "config file.")
