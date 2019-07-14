@@ -26,7 +26,7 @@ var Auth = map[string]string{
 
 // 封装grequests的Get方法获取字符串内容
 func getPage(urlPath string, params map[string]string) string {
-	ro := &grequests.RequestOptions{
+	ro := &grequests.RequestOptions{ //赋值之后的内存地址传递给ro
 		Params: params,
 	}
 
